@@ -30,7 +30,12 @@
       consecuencias irremediables.
 
     \item[3.] Usando el polinomio $x^4+x+1$, da la lista de bits de salida de un LFSR asociado usando como semilla 
-      una secuencia de ceros, y cualquier otra que escojas.
+      una secuencia de ceros, y cualquier otra que escojas.\\
+      Si empezamos el LFSR con una secuencia de ceros, obtenemos la sigueinte secuencia de bits:
+      $0000,1000,0100,1010,0101,0010,1001,$\\$1100,0110,1011,1101,1110,0111,0011,0001$
+      De modo que los bits de salida son $000010100110111$.\\
+      Si empezamos con la secuencia $1010$ obtenemos la sucesión $1010,0101,$\\$0010,1001,1100,0110,1011,1101,1110,0111,0011,0001,0000,1000,$\\$0100$.
+      Así que los bits de salida son $010100110111000$.
 
     \item[4.] Supón que se manda un criptotexto $c=c_1,c_2, \ldots$, pero se pierde el bloque $c_2$, así que 
       se recibe $c=c_1, c_3, \ldots$. Al descifrar el mensaje, ¿Cuál es el efecto de un bloque no recibido al usar los modos 
@@ -43,7 +48,37 @@
       $m_i = c_i \oplus E_K(c_{i-1}\oplus E_K(c_{i-2}\oplus \cdots))$. Asì, si se pierde el bloque $c_2$ el único bloque de texto que podríamos descifrar correctamente es el primero.\\
       Si usamos el modo CTR, también el único mensaje que podemos descifrar correctamente es el primero, pues en los restantes, el contador que usamos para descifrar el 
       bloque $c_i$ es en realidad el correspondiente al bloque $c_{i+1}$.
-    \item[5.] Investiga qué es el cifrado RC4. Da la descripción de su funcionamiento y sus debilidades.
+    \item[5.] Investiga qué es el cifrado RC4. Da la descripción de su funcionamiento y sus debilidades.\\
+      El cifrado RC4 (Rivest Cipher 4) es un cifrado de stream. Aunque es muy sencillo y rápido, se le han 
+      encontrado múltiples vulnerabilidades.\\
+      \textbf{Descripción:}\\
+      RC4 genera un stream de bits pseudoaleatorio que se puede usar para cifrar combinandolo con un mensaje 
+      mediante la operación xor. En este sentido, es similar al cifrado de Vernam, excepto que se usa un stream 
+      pseudoaleatorio de bits en lugar de un stream previamente fijado.\\
+      Para generar el stream, el cifrado usa un estado interno que consiste de dos partes: una permutación $S$
+      de los 256 posibles bytes y dos apuntadores de 8 bits $i$ y $j$.\\
+      \textbf{Algoritmo de key-scheduling}\\
+      El algoritmo de key-scheduling se usa para inicializar la permutación $S$ a partir de una llave inicia. Primero el array 
+      $S$ es incializado con la permutación identidad. Después $S$ es procesado por $256$ iteraciones 
+      de la siguiente manera: Se inicia el apuntador $j$ en el byte 0 y se inica un ciclo desde 0 hasta 255
+      en el apuntador $i$. El sigueinte valor de $j$ es igual al valor inicial de $j$ sumado con 
+      el valor de la permutación en el lugar $j$ y el valor de la llave en la posición $i$ (módulo la longitud de la llave) y todo 
+      esto se hace módulo 256 (para que la permutación siga siendo de los 256 bytes). Después, se cambia el valor
+      de la permutación en el lugar $i$ por el valor de la permutación en el lugar $j$ (el cual calculamos).
+      Tras repetir esto 256 veces, obtenemos la permutación incial $S$.\\
+      \textbf{Algoritmo de generación pseudo-aleatorio (PRGA)}\\
+      En cada iteración, el algoritmo hace lo siguiente:\\
+      \begin{itemize}
+        \item Incrementa el valor de $i$.
+        \item Le añade a $j$ el valor de la permutación $S$ en la posición $i$.
+        \item Cambia los valores de $S$ en $i$ por el de $S$ en $j$ y usa la suma de estos módulo 256
+          para obtener un tercer elemento de $S$, el cual es el siguiente bit de la llave.
+      \end{itemize}
+      Este proceso produce un stream de bits que se puden usar para hacer xor con el mensaje que queremos cifrar.\\
+      \textbf{Debilidades:}\\
+
+      
+      
 
     \item[6.] Determina si $a$ es residuo cuadrático módulo $n$. Muestra tu procedimiento
   \end{enumerate}

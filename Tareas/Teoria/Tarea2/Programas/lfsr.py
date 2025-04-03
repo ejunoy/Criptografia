@@ -6,7 +6,7 @@ def push(estado, valor):
     return copia
 
 def calcPush(lugares, estado):
-    valor = 0
+    valor = 1
     for i in lugares:
         lugar = i-1 
         valor = (valor+estado[lugar])%2
